@@ -1,0 +1,5 @@
+CAUTION = This file contain UNWDS version strings. Do not edit it.
+
+REMOTE_UNWDS_VERSION = 2.4.1
+REMOTE_PHP_VERSION = 7.4.18
+RELEASED = 28 Apr 2021
