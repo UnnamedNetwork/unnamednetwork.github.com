@@ -17,6 +17,7 @@ $downloadUri = $asset.browser_download_url
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/version_control/remote_version.info" -OutFile "$PSScriptRoot\remote_version.info"
 $CurrentVPath = "$PSScriptRoot\current_version.info"
 $CurrentRPath = "$PSScriptRoot\remote_version.info"
+Get-ChildItem -path "$CurrentRPath" -force | ForEach-Object {$_.Attributes = "Hidden"}
 
 function GetServerVersion {
     Write-Output "[*] Contacting updater server to get version..."
@@ -61,9 +62,10 @@ function UpdateVersionFile {
     $replace = 'CURRENT'
 
     (Get-Content -Path $filePath) -replace $find, $replace | Add-Content -Path $tempFilePath
-
+    Get-ChildItem -path "$CurrentVPath" -force | ForEach-Object {$_.Attributes = "Normal"}
     Remove-Item -Path $filePath
     Move-Item -Path $tempFilePath -Destination $filePath
+    Get-ChildItem -path "$filePath" -force | ForEach-Object {$_.Attributes = "Hidden"}
 }
 
 function UpdateChecker{
