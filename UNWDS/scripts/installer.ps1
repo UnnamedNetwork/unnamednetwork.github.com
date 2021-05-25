@@ -1,7 +1,7 @@
 #Requires -Version 5.1
 # Require PowerShell v5.1 or above to prevent errors. Windows 10/Server version 1607 or newer have already pre-installed.
 
-$scriptVersion = "1.1.0"
+$scriptVersion = "1.1.1"
 $host.ui.RawUI.WindowTitle = "UNWDS Installer (v$scriptVersion)"
 $ProgressPreference = 'SilentlyContinue'
 
@@ -14,10 +14,9 @@ $assetPattern = "UNWDS.phar"
 $releasesUri = "https://api.github.com/repos/$repoName/releases/latest"
 $asset = (Invoke-WebRequest $releasesUri | ConvertFrom-Json).assets | Where-Object name -like $assetPattern
 $downloadUri = $asset.browser_download_url
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/version_control/remote_version.info" -OutFile "$PSScriptRoot\remote_version.info"
 $CurrentVPath = "$PSScriptRoot\current_version.info"
 $CurrentRPath = "$PSScriptRoot\remote_version.info"
-Get-ChildItem -path "$CurrentRPath" -force | ForEach-Object {$_.Attributes = "Hidden"}
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/version_control/remote_version.info" -OutFile "$PSScriptRoot\remote_version.info"
 
 function GetServerVersion {
     Write-Output "[*] Contacting updater server to get version..."
@@ -234,7 +233,6 @@ else
         GetServerVersion
         Main
         CheckFiles
-        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/version_control/remote_version.info" -OutFile "$PSScriptRoot\remote_version.info"
         UpdateVersionFile
         $host.ui.RawUI.WindowTitle = "Windows PowerShell" #set the window title back to default
     } else {
