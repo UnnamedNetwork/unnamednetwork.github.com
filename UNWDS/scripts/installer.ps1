@@ -1,7 +1,21 @@
 #Requires -Version 5.1
 # Require PowerShell v5.1 or above to prevent errors. Windows 10/Server version 1607 or newer have already pre-installed.
 
-$scriptVersion = "1.1.1"
+# HOW UNWDS INSTALLER (WINDOWS) WORK?
+# UNWDS Installer are based on PowerShell script.
+# First, the installer download a file named "remote_version.info" contains some version strings that helps some update tasks easier.
+# Based on that file, installer have some info for builds they are working with and define it to current version, file named "current_version.info"
+# Then the installer download the server software from Github and PHP from pmmp's Jenkins servers
+# HOW UPDATE WORK?
+# When update, the installer compare strings from server and current (so that changing contents in "current_version.info" are not recommended.)
+# If the installer detect the new version, it's will download from Github (for server software) or pmmp's Jenkins (for PHP) automatically.
+# Then, the installer delete "current_version.info" file and rename "remote_version.info" to "current_version.info" 
+# Update completed!
+#
+# Enjoy your installer and don't delete current_version.info. Thanks for using this tool.
+# exit()
+
+$scriptVersion = "1.2.0"
 $host.ui.RawUI.WindowTitle = "UNWDS Installer (v$scriptVersion)"
 $ProgressPreference = 'SilentlyContinue'
 
