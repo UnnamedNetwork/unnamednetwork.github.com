@@ -1,12 +1,15 @@
 #Requires -Version 5.1
 # Require PowerShell v5.1 or above to prevent errors. Windows 10/Server version 1607 or newer have already pre-installed.
 
+# Windows 11 removed Internet Explorer, so we current working on alternative plan.
+
 # HOW UNWDS INSTALLER (WINDOWS) WORK?
 # UNWDS Installer are based on PowerShell script.
 # First, the installer download a file named "remote_version.info" contains some version strings that helps some update tasks easier.
 # Based on that file, installer have some info for builds they are working with and define it to current version, file named "current_version.info"
 # Then the installer download the server software from Github and PHP from pmmp's Jenkins servers
 # HOW UPDATE WORK?
+
 # When update, the installer compare strings from server and current (so that changing contents in "current_version.info" are not recommended.)
 # If the installer detect the new version, it's will download from Github (for server software) or pmmp's Jenkins (for PHP) automatically.
 # Then, the installer delete "current_version.info" file and rename "remote_version.info" to "current_version.info" 
@@ -15,7 +18,7 @@
 # Enjoy your installer and don't delete current_version.info. Thanks for using this tool.
 # exit()
 
-$scriptVersion = "1.2.0"
+$scriptVersion = "1.3.0"
 $host.ui.RawUI.WindowTitle = "UNWDS Installer (v$scriptVersion)"
 $ProgressPreference = 'SilentlyContinue'
 
@@ -30,7 +33,7 @@ $asset = (Invoke-WebRequest $releasesUri | ConvertFrom-Json).assets | Where-Obje
 $downloadUri = $asset.browser_download_url
 $CurrentVPath = "$PSScriptRoot\current_version.info"
 $CurrentRPath = "$PSScriptRoot\remote_version.info"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/version_control/remote_version.info" -OutFile "$PSScriptRoot\remote_version.info"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/version_control/remote_version.info" -OutFile "$PSScriptRoot\remote_version.info" -UseBasicParsing
 
 function GetServerVersion {
     Write-Output "[*] Contacting updater server to get version..."
@@ -122,7 +125,7 @@ function UpdateChecker{
         Remove-Item PHP-7.4-Windows-x64.zip -Force -erroraction 'silentlycontinue'
         Remove-Item vc_redist.x64.exe -erroraction 'silentlycontinue'
         Write-Output "[*] Updating PHP v$remotePHPversion (Windows x64)...";
-        Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-7.4-Aggregate/lastSuccessfulBuild/artifact/PHP-7.4-Windows-x64.zip" -OutFile "PHP-7.4-Windows-x64.zip"
+        Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-7.4-Aggregate/lastSuccessfulBuild/artifact/PHP-7.4-Windows-x64.zip" -OutFile "PHP-7.4-Windows-x64.zip" -UseBasicParsing
         Expand-Archive -LiteralPath PHP-7.4-Windows-x64.zip -Force
         Get-ChildItem -Path "PHP-7.4-Windows-x64" -Recurse |  Move-Item -Destination .
         Remove-Item PHP-7.4-Windows-x64.zip -Force -erroraction 'silentlycontinue'
@@ -134,7 +137,7 @@ function UpdateChecker{
         Remove-Item start.cmd -erroraction 'silentlycontinue'
         Write-Output "[*] Updating UNWDS v$remoteUNWDSversion";
         Invoke-WebRequest -Uri $downloadUri -OutFile "UNWDS.phar"
-        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.cmd" -OutFile "start.cmd"
+        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.cmd" -OutFile "start.cmd" -UseBasicParsing
         Write-Output "[*] Update successfully!"
     }
     
@@ -201,11 +204,11 @@ function Main {
     # First, download the server software phar and startup script...
     Write-Output "[2/3] Downloading UNWDS v$remoteUNWDSversion, released in $remoteReleasedDate...";
     Invoke-WebRequest -Uri $downloadUri -OutFile "UNWDS.phar"
-    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.cmd" -OutFile "start.cmd"
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.cmd" -OutFile "start.cmd" -UseBasicParsing
     Write-Output "`n"
     # Second, download PHP and extract it.
     Write-Output "[3/3] Downloading PHP $remotePHPVersion (Windows x64)...";
-    Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-7.4-Aggregate/lastSuccessfulBuild/artifact/PHP-7.4-Windows-x64.zip" -OutFile "PHP-7.4-Windows-x64.zip"
+    Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-7.4-Aggregate/lastSuccessfulBuild/artifact/PHP-7.4-Windows-x64.zip" -OutFile "PHP-7.4-Windows-x64.zip" -UseBasicParsing
     Expand-Archive -LiteralPath PHP-7.4-Windows-x64.zip -Force
     Get-ChildItem -Path "PHP-7.4-Windows-x64" -Recurse |  Move-Item -Destination .
     Remove-Item PHP-7.4-Windows-x64.zip -Force -erroraction 'silentlycontinue'
@@ -242,6 +245,16 @@ if ([Environment]::Is64BitProcess -ne [Environment]::Is64BitOperatingSystem)
 }
 else
 {
+    if ([Environment]::OSVersion.Version.Build -ge 22000)
+    {
+        Write-Output "[ERR] You're running Windows 11, version of Windows that removed Internet Explorer.";
+        Write-Output "[ERR] Internet Explorer is manatory for UNWDS PS Installer.";
+        Write-Output "[ERR] We're working on UNWDS PS Installer for Windows 11.";
+        Write-Output "[ERR] Please use other way to download UNWDS.";
+        exit
+    }
+    else
+    {
     if (-not (Test-Path -Path current_version.info)) {
         CleanUp
         GetServerVersion
@@ -251,5 +264,6 @@ else
         $host.ui.RawUI.WindowTitle = "Windows PowerShell" #set the window title back to default
     } else {
         UpdateChecker
+    }
     }
 }
