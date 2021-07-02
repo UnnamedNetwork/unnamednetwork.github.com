@@ -245,10 +245,10 @@ if ([Environment]::Is64BitProcess -ne [Environment]::Is64BitOperatingSystem)
 }
 else
 {
-    if ([Environment]::OSVersion.Version.Build -ge 22000)
+    if ([Environment]::OSVersion.Version.Build -ge 22000) #Build 22000 is the first public Windows 11 build.
     {
-        Write-Output "[ERR] You're running Windows 11, version of Windows that removed Internet Explorer.";
-        Write-Output "[ERR] Internet Explorer is manatory for UNWDS PS Installer.";
+        Write-Output "[ERR] You're running Windows 11, which removed Internet Explorer.";
+        Write-Output "[ERR] Internet Explorer is mandatory for UNWDS PS Installer.";
         Write-Output "[ERR] We're working on UNWDS PS Installer for Windows 11.";
         Write-Output "[ERR] Please use other way to download UNWDS.";
         exit
