@@ -33,7 +33,7 @@ $asset = (Invoke-WebRequest $releasesUri | ConvertFrom-Json).assets | Where-Obje
 $downloadUri = $asset.browser_download_url
 $CurrentVPath = "$PSScriptRoot\current_version.info"
 $CurrentRPath = "$PSScriptRoot\remote_version.info"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/version_control/remote_version.info" -OutFile "$PSScriptRoot\remote_version.info" -UseBasicParsing
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/version_control/remote_version.info" -OutFile "$PSScriptRoot\remote_version.info"
 
 function GetServerVersion {
     Write-Output "[*] Contacting updater server to get version..."
@@ -125,7 +125,7 @@ function UpdateChecker{
         Remove-Item PHP-7.4-Windows-x64.zip -Force -erroraction 'silentlycontinue'
         Remove-Item vc_redist.x64.exe -erroraction 'silentlycontinue'
         Write-Output "[*] Updating PHP v$remotePHPversion (Windows x64)...";
-        Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-7.4-Aggregate/lastSuccessfulBuild/artifact/PHP-7.4-Windows-x64.zip" -OutFile "PHP-7.4-Windows-x64.zip" -UseBasicParsing
+        Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-7.4-Aggregate/lastSuccessfulBuild/artifact/PHP-7.4-Windows-x64.zip" -OutFile "PHP-7.4-Windows-x64.zip"
         Expand-Archive -LiteralPath PHP-7.4-Windows-x64.zip -Force
         Get-ChildItem -Path "PHP-7.4-Windows-x64" -Recurse |  Move-Item -Destination .
         Remove-Item PHP-7.4-Windows-x64.zip -Force -erroraction 'silentlycontinue'
@@ -137,7 +137,7 @@ function UpdateChecker{
         Remove-Item start.cmd -erroraction 'silentlycontinue'
         Write-Output "[*] Updating UNWDS v$remoteUNWDSversion";
         Invoke-WebRequest -Uri $downloadUri -OutFile "UNWDS.phar"
-        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.cmd" -OutFile "start.cmd" -UseBasicParsing
+        Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.cmd" -OutFile "start.cmd"
         Write-Output "[*] Update successfully!"
     }
     
@@ -204,11 +204,11 @@ function Main {
     # First, download the server software phar and startup script...
     Write-Output "[2/3] Downloading UNWDS v$remoteUNWDSversion, released in $remoteReleasedDate...";
     Invoke-WebRequest -Uri $downloadUri -OutFile "UNWDS.phar"
-    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.cmd" -OutFile "start.cmd" -UseBasicParsing
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.cmd" -OutFile "start.cmd"
     Write-Output "`n"
     # Second, download PHP and extract it.
     Write-Output "[3/3] Downloading PHP $remotePHPVersion (Windows x64)...";
-    Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-7.4-Aggregate/lastSuccessfulBuild/artifact/PHP-7.4-Windows-x64.zip" -OutFile "PHP-7.4-Windows-x64.zip" -UseBasicParsing
+    Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-7.4-Aggregate/lastSuccessfulBuild/artifact/PHP-7.4-Windows-x64.zip" -OutFile "PHP-7.4-Windows-x64.zip"
     Expand-Archive -LiteralPath PHP-7.4-Windows-x64.zip -Force
     Get-ChildItem -Path "PHP-7.4-Windows-x64" -Recurse |  Move-Item -Destination .
     Remove-Item PHP-7.4-Windows-x64.zip -Force -erroraction 'silentlycontinue'
