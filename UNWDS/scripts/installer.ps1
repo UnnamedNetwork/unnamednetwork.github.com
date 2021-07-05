@@ -120,16 +120,16 @@ function UpdateChecker{
     }
  
     function UpdatePHP {
-        Remove-Item PHP-7.4-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
+        Remove-Item PHP-$currentPHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
         Remove-Item bin -Recurse -Force -erroraction 'silentlycontinue'
-        Remove-Item PHP-7.4-Windows-x64.zip -Force -erroraction 'silentlycontinue'
+        Remove-Item PHP-$currentPHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
         Remove-Item vc_redist.x64.exe -erroraction 'silentlycontinue'
         Write-Output "[*] Updating PHP v$remotePHPversion (Windows x64)...";
-        Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-7.4-Aggregate/lastSuccessfulBuild/artifact/PHP-7.4-Windows-x64.zip" -OutFile "PHP-7.4-Windows-x64.zip"
-        Expand-Archive -LiteralPath PHP-7.4-Windows-x64.zip -Force
-        Get-ChildItem -Path "PHP-7.4-Windows-x64" -Recurse |  Move-Item -Destination .
-        Remove-Item PHP-7.4-Windows-x64.zip -Force -erroraction 'silentlycontinue'
-        Remove-Item PHP-7.4-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
+        Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-$currentPHPversion-Aggregate/lastSuccessfulBuild/artifact/PHP-$currentPHPversion-Windows-x64.zip" -OutFile "PHP-$currentPHPversion-Windows-x64.zip"
+        Expand-Archive -LiteralPath PHP-$currentPHPversion-Windows-x64.zip -Force
+        Get-ChildItem -Path "PHP-$currentPHPversion-Windows-x64" -Recurse |  Move-Item -Destination .
+        Remove-Item PHP-$currentPHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
+        Remove-Item PHP-$currentPHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
         Write-Output "[*] Update successfully!"
     }
     function UpdateUNWDS {
@@ -174,9 +174,9 @@ function CleanUp {
     Write-Output "`n"
     Write-Output "[1/3] Cleaning up";
     Write-Output "`n"
-    Remove-Item PHP-7.4-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
+    Remove-Item PHP-$currentPHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
     Remove-Item bin -Recurse -Force -erroraction 'silentlycontinue'
-    Remove-Item PHP-7.4-Windows-x64.zip -Force -erroraction 'silentlycontinue'
+    Remove-Item PHP-$currentPHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
     Remove-Item UNWDS.phar -Force -erroraction 'silentlycontinue'
     Remove-Item start.cmd -erroraction 'silentlycontinue'
     Remove-Item current_version.info -Force -erroraction 'silentlycontinue'
@@ -185,12 +185,12 @@ function CleanUp {
 
 function ErrorCleanUp {
     Clear-Host
-    Write-Output "[ERR] Installation was failed because an error occurred";
+    Write-Output "[ERR] Install was failed because an error occurred";
     Write-Output "[*] Cleaning up files because installation errors...";
     Write-Output "`n"
-    Remove-Item PHP-7.4-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
+    Remove-Item PHP-$currentPHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
     Remove-Item bin -Recurse -Force -erroraction 'silentlycontinue'
-    Remove-Item PHP-7.4-Windows-x64.zip -Force -erroraction 'silentlycontinue'
+    Remove-Item PHP-$currentPHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
     Remove-Item UNWDS.phar -Force -erroraction 'silentlycontinue'
     Remove-Item start.cmd -erroraction 'silentlycontinue'
     Remove-Item vc_redist.x64.exe -erroraction 'silentlycontinue'
@@ -208,11 +208,11 @@ function Main {
     Write-Output "`n"
     # Second, download PHP and extract it.
     Write-Output "[3/3] Downloading PHP $remotePHPVersion (Windows x64)...";
-    Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-7.4-Aggregate/lastSuccessfulBuild/artifact/PHP-7.4-Windows-x64.zip" -OutFile "PHP-7.4-Windows-x64.zip"
-    Expand-Archive -LiteralPath PHP-7.4-Windows-x64.zip -Force
-    Get-ChildItem -Path "PHP-7.4-Windows-x64" -Recurse |  Move-Item -Destination .
-    Remove-Item PHP-7.4-Windows-x64.zip -Force -erroraction 'silentlycontinue'
-    Remove-Item PHP-7.4-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
+    Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-$currentPHPversion-Aggregate/lastSuccessfulBuild/artifact/PHP-$currentPHPversion-Windows-x64.zip" -OutFile "PHP-$currentPHPversion-Windows-x64.zip"
+    Expand-Archive -LiteralPath PHP-$currentPHPversion-Windows-x64.zip -Force
+    Get-ChildItem -Path "PHP-$currentPHPversion-Windows-x64" -Recurse |  Move-Item -Destination .
+    Remove-Item PHP-$currentPHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
+    Remove-Item PHP-$currentPHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
     Write-Output "`n"
 }
 
