@@ -120,16 +120,18 @@ function UpdateChecker{
     }
  
     function UpdatePHP {
-        Remove-Item PHP-$currentPHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
+        Remove-Item PHP-$currentPHPversion-Windows-x64 -Recurse -Force -erroraction 'SilentlyContinue'
+        Remove-Item PHP-$remotePHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
         Remove-Item bin -Recurse -Force -erroraction 'silentlycontinue'
+        Remove-Item PHP-$remotePHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
         Remove-Item PHP-$currentPHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
         Remove-Item vc_redist.x64.exe -erroraction 'silentlycontinue'
         Write-Output "[*] Updating PHP v$remotePHPversion (Windows x64)...";
-        Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-$currentPHPversion-Aggregate/lastSuccessfulBuild/artifact/PHP-$currentPHPversion-Windows-x64.zip" -OutFile "PHP-$currentPHPversion-Windows-x64.zip"
-        Expand-Archive -LiteralPath PHP-$currentPHPversion-Windows-x64.zip -Force
-        Get-ChildItem -Path "PHP-$currentPHPversion-Windows-x64" -Recurse |  Move-Item -Destination .
-        Remove-Item PHP-$currentPHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
-        Remove-Item PHP-$currentPHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
+        Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-$remotePHPversion-Aggregate/lastSuccessfulBuild/artifact/PHP-$remotePHPversion-Windows-x64.zip" -OutFile "PHP-$remotePHPversion-Windows-x64.zip"
+        Expand-Archive -LiteralPath PHP-$remotePHPversion-Windows-x64.zip -Force
+        Get-ChildItem -Path "PHP-$remotePHPversion-Windows-x64" -Recurse |  Move-Item -Destination .
+        Remove-Item PHP-$remotePHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
+        Remove-Item PHP-$remotePHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
         Write-Output "[*] Update successfully!"
     }
     function UpdateUNWDS {
@@ -174,9 +176,9 @@ function CleanUp {
     Write-Output "`n"
     Write-Output "[1/3] Cleaning up";
     Write-Output "`n"
-    Remove-Item PHP-$currentPHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
+    Remove-Item PHP-$remotePHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
     Remove-Item bin -Recurse -Force -erroraction 'silentlycontinue'
-    Remove-Item PHP-$currentPHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
+    Remove-Item PHP-$remotePHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
     Remove-Item UNWDS.phar -Force -erroraction 'silentlycontinue'
     Remove-Item start.cmd -erroraction 'silentlycontinue'
     Remove-Item current_version.info -Force -erroraction 'silentlycontinue'
@@ -188,9 +190,9 @@ function ErrorCleanUp {
     Write-Output "[ERR] Install was failed because an error occurred";
     Write-Output "[*] Cleaning up files because installation errors...";
     Write-Output "`n"
-    Remove-Item PHP-$currentPHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
+    Remove-Item PHP-$remotePHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
     Remove-Item bin -Recurse -Force -erroraction 'silentlycontinue'
-    Remove-Item PHP-$currentPHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
+    Remove-Item PHP-$remotePHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
     Remove-Item UNWDS.phar -Force -erroraction 'silentlycontinue'
     Remove-Item start.cmd -erroraction 'silentlycontinue'
     Remove-Item vc_redist.x64.exe -erroraction 'silentlycontinue'
@@ -208,11 +210,11 @@ function Main {
     Write-Output "`n"
     # Second, download PHP and extract it.
     Write-Output "[3/3] Downloading PHP $remotePHPVersion (Windows x64)...";
-    Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-$currentPHPversion-Aggregate/lastSuccessfulBuild/artifact/PHP-$currentPHPversion-Windows-x64.zip" -OutFile "PHP-$currentPHPversion-Windows-x64.zip"
-    Expand-Archive -LiteralPath PHP-$currentPHPversion-Windows-x64.zip -Force
-    Get-ChildItem -Path "PHP-$currentPHPversion-Windows-x64" -Recurse |  Move-Item -Destination .
-    Remove-Item PHP-$currentPHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
-    Remove-Item PHP-$currentPHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
+    Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-$remotePHPversion-Aggregate/lastSuccessfulBuild/artifact/PHP-$remotePHPversion-Windows-x64.zip" -OutFile "PHP-$remotePHPversion-Windows-x64.zip"
+    Expand-Archive -LiteralPath PHP-$remotePHPversion-Windows-x64.zip -Force
+    Get-ChildItem -Path "PHP-$remotePHPversion-Windows-x64" -Recurse |  Move-Item -Destination .
+    Remove-Item PHP-$remotePHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
+    Remove-Item PHP-$remotePHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
     Write-Output "`n"
 }
 
@@ -241,7 +243,7 @@ if ([Environment]::Is64BitProcess -ne [Environment]::Is64BitOperatingSystem)
 {
     Write-Output "[ERR] You're running 32-bit system or you're run this UNWDS Installer in PowerShell (x86), these are not supported by UNWDS.";
     Write-Output "[ERR] Please consider upgrade to 64-bit system or use PowerShell (x64) to run UNWDS Installer.";
-    exit
+    throw Unsupported current CPU or PowerShell instance (32bit).
 }
 else
 {
@@ -251,7 +253,7 @@ else
         Write-Output "[ERR] Internet Explorer is mandatory for UNWDS PS Installer.";
         Write-Output "[ERR] We're working on UNWDS PS Installer for Windows 11.";
         Write-Output "[ERR] Please use other way to download UNWDS.";
-        exit
+        throw Unsupported OS.
     }
     else
     {
