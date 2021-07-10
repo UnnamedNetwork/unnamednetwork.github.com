@@ -1,0 +1,16 @@
+[
+    {
+        "Name": "UNWDSVersion",
+        "Data": "2.5.1",
+        "Target": "Stable"
+    },
+    {
+        "Name": "PHPVersion",
+        "Data": "7.4.0"
+    },
+    {
+        "Name": "ReleaseDate",
+        "Data": "06 Jul 2021"
+    }
+]
+  
