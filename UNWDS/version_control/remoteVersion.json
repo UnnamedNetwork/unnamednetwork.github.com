@@ -1,16 +1,33 @@
 [
     {
+        "Name": "JsonVersion",
+        "Type": "Float",
+        "Value": "1.1"
+    },
+    {
+        "Name": "Target",
+        "Type": "String",
+        "Value": "Stable"
+    },
+    {
         "Name": "UNWDSVersion",
-        "Data": "2.5.1",
-        "Target": "Stable"
+        "Type": "Float",
+        "Value": "2.5.1a"
+    },
+    {
+        "Name": "BuildNumber",
+        "Type": "Integer",
+        "Value": "2511"
     },
     {
         "Name": "PHPVersion",
-        "Data": "7.4"
+        "Type": "Float",
+        "Value": "7.4"
     },
     {
         "Name": "ReleaseDate",
-        "Data": "06 Jul 2021"
+        "Type": "String",
+        "Value": "06 Jul 2021"
     }
 ]
   
