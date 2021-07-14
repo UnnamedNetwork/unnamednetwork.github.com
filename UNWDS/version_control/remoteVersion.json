@@ -12,12 +12,12 @@
     {
         "Name": "UNWDSVersion",
         "Type": "Float",
-        "Value": "2.5.1a"
+        "Value": "2.7.0"
     },
     {
         "Name": "BuildNumber",
         "Type": "Integer",
-        "Value": "2511"
+        "Value": "2700"
     },
     {
         "Name": "PHPVersion",
@@ -27,7 +27,7 @@
     {
         "Name": "ReleaseDate",
         "Type": "String",
-        "Value": "06 Jul 2021"
+        "Value": "14 Jul 2021"
     }
 ]
   
