@@ -2,7 +2,7 @@
 
 #TODO: work at 'function as parameter'
 
-$scriptVersion = "2.0.1"
+$scriptVersion = "2.1.1"
 $host.ui.RawUI.WindowTitle = "UNWDS Installer (v$scriptVersion)"
 
 # First, set PS's security protocol to TLS1.2 to avoid Github Releases download problems.
@@ -162,6 +162,7 @@ function Update {
     GetCurrentVersion
     GetServerVersion
     CompareVersion
+    UpdateVersionFile
 }
 function Main {
     if (-not (Test-Path -Path currentVersion.json)) {
