@@ -1,12 +1,12 @@
 #Requires -Version 5.1
-
-#TODO: work at 'function as parameter'
-
-$scriptVersion = "2.1.1"
-$host.ui.RawUI.WindowTitle = "UNWDS Installer (v$scriptVersion)"
-
 # First, set PS's security protocol to TLS1.2 to avoid Github Releases download problems.
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+#TODO: work at 'function as parameter'
+
+$scriptVersion = "2.2.0"
+$host.ui.RawUI.WindowTitle = "UNWDS Installer (v$scriptVersion)"
+
+$IsWin = $PSVersionTable.Platform -match '^($|(Microsoft )?Win)'
 
 $repo = "UnnamedNetwork/UNWDS"
 $file = "UNWDS.phar"
@@ -71,7 +71,7 @@ function ErrorCleanUp {
     Write-Host "`n"
     Remove-Item ./* -Exclude installer.ps1 -Recurse -ErrorAction 'silentlycontinue'
     Write-Host "Some file does not exist. UNWDS will not run if missing files. Please try to run install script again."
-    $host.ui.RawUI.WindowTitle = "Windows PowerShell" #set the window title back to default
+    $host.ui.RawUI.WindowTitle = "PowerShell" #set the window title back to default
 }
 
 function Install {
@@ -144,7 +144,7 @@ function CheckFiles {
 }
 
 function StartScript {
-    function PlatformCheck {
+    function 1stCheck { # First, will checking OS and current Powershell instance. 
         if ([Environment]::Is64BitProcess -ne [Environment]::Is64BitOperatingSystem)
         {
             Write-Host "[ERR] You're running 32-bit system or you're run this UNWDS Installer in PowerShell (x86), these are not supported by UNWDS.";
@@ -153,10 +153,19 @@ function StartScript {
         } 
         else
         {
-        Main
+        2ndCheck
         }
     }
-    PlatformCheck
+    function 2ndCheck { #Second, check OS if whether is Windows or Linux/macOS
+        if ($IsWin){
+            Write-Host "[*] Windows detected. Continuing..."
+            Main
+        } else {
+            Write-Host "[*] Linux/macOS detected, using bash script to install..."
+            UnixInstall
+        }
+    }
+    1stCheck
 }
 function Update {
     GetCurrentVersion
@@ -177,9 +186,15 @@ function Main {
         Install
         CheckFiles
         UpdateVersionFile
-        $host.ui.RawUI.WindowTitle = "Windows PowerShell" #set the window title back to default
+        $host.ui.RawUI.WindowTitle = "PowerShell" #set the window title back to default
     } else {
         Update
     }
 }
+
+function UnixInstall { #need to test later, currently I don't have any linux/macos machine...
+    Invoke-WebRequest -Uri https://unnamednetwork.github.io/UNWDS/scripts/installer.sh -OutFile "installer.sh"
+    bash installer.sh
+}
+
 StartScript
