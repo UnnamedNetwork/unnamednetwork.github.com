@@ -31,7 +31,7 @@ function GetServerVersion {
     $Global:ReleaseDetails = $remoteJsonData.details_url
     $Global:remoteHumanDate=(Get-Date 01.01.1970)+([System.TimeSpan]::fromseconds($remoteReleasedDate))
     Write-Host "[*] Server latest PHP version is: $remotePHPversion"
-    Write-Host "[*] Server latest $ServerName version is: $remoteUNWDSversion - $remoteBuildNumber (for $remoteTarget), released in $remoteHumanDate "
+    Write-Host "[*] Server latest $ServerName version is: $remoteUNWDSversion - $remoteBuildNumber (for Minecraft: Bedrock Edition v$remoteTarget), released in $remoteHumanDate "
     Add-Content -Path $PSScriptRoot/log.txt -Value "Fetched download URL: $downloadURL | File name: $file_name"
     Add-Content -Path $PSScriptRoot/log.txt -Value "Fetched release details: $ReleaseDetails"
     Write-Host "`n"
@@ -88,7 +88,7 @@ function ErrorCleanUp {
 
 function Install {
     Add-Content -Path $PSScriptRoot/log.txt -Value "Install log:"
-    Write-Host "[2/3] Downloading $ServerName v$remoteUNWDSversion (for $remoteTarget), released in $remoteReleasedDate...";
+    Write-Host "[2/3] Downloading $ServerName v$remoteUNWDSversion (for $remoteTarget), released in $remoteHumanDate...";
     Add-Content -Path $PSScriptRoot/log.txt -Value "Use download URL with file name: $downloadURL ($file_name)"
     Invoke-WebRequest $downloadURL -Out $PSScriptRoot/$file_name
     Write-Host "Downloading $downloadURL" #Debugging only
