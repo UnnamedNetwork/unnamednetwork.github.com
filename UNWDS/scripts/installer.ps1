@@ -2,43 +2,55 @@
 # First, set PS's security protocol to TLS1.2 to avoid Github Releases download problems.
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 #TODO: work at 'function as parameter'
+$name = "UNWDS"
 
-$scriptVersion = "2.2.0"
-$host.ui.RawUI.WindowTitle = "UNWDS Installer (v$scriptVersion)"
+$scriptVersion = "2.3.0"
+$host.ui.RawUI.WindowTitle = "$name Installer (v$scriptVersion)"
 
 $IsWin = $PSVersionTable.Platform -match '^($|(Microsoft )?Win)'
 
-$repo = "UnnamedNetwork/UNWDS"
-$file = "UNWDS.phar"
 $CurrentVPath = "$PSScriptRoot\currentVersion.json"
+
+
 
 function GetServerVersion {
     Write-Host "[*] Contacting update server to get version..."
     Write-Host "`n"
-    $remoteJsonData = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/version_control/remoteVersion.json" | ConvertFrom-Json
-    $Global:remoteJsonVersion= $remoteJsonData[0].Value
-    $Global:remoteTarget= $remoteJsonData[1].Value
-    $Global:remoteUNWDSversion = $remoteJsonData[2].Value
-    $Global:remoteBuildNumber = $remoteJsonData[3].Value
-    $Global:remotePHPversion = $remoteJsonData[4].Value
-    $Global:remoteReleasedDate = $remoteJsonData[5].Value
-    Write-Host "[*] Server JSON configuration version: $remoteJsonVersion"
+    Add-Content -Path $PSScriptRoot/log.txt -Value "GetServerVersion activity log:"
+    $remoteJsonData = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/update/api.json" | ConvertFrom-Json
+    Add-Content -Path $PSScriptRoot/log.txt -Value "Server JSON data:"
+    Add-Content -Path $PSScriptRoot/log.txt -Value "$remoteJsonData"
+    $Global:ServerName = $remoteJsonData.job; 
+    $Global:remoteTarget= $remoteJsonData.mcpe_version
+    $Global:remoteUNWDSversion = $remoteJsonData.base_version
+    $Global:remoteBuildNumber = $remoteJsonData.build_number
+    $Global:remotePHPversion = $remoteJsonData.php_version
+    $Global:downloadURL = $remoteJsonData.download_url
+    $Global:remoteReleasedDate = $remoteJsonData.date
+    $Global:file_name = $remoteJsonData.phar_name
+    $Global:ReleaseDetails = $remoteJsonData.details_url
+    $Global:remoteHumanDate=(Get-Date 01.01.1970)+([System.TimeSpan]::fromseconds($remoteReleasedDate))
     Write-Host "[*] Server latest PHP version is: $remotePHPversion"
-    Write-Host "[*] Server latest UNWDS version is: $remoteUNWDSversion - $remoteBuildNumber ($remoteTarget), released in $remoteReleasedDate "
+    Write-Host "[*] Server latest $ServerName version is: $remoteUNWDSversion - $remoteBuildNumber (for $remoteTarget), released in $remoteHumanDate "
+    Add-Content -Path $PSScriptRoot/log.txt -Value "Fetched download URL: $downloadURL | File name: $file_name"
+    Add-Content -Path $PSScriptRoot/log.txt -Value "Fetched release details: $ReleaseDetails"
     Write-Host "`n"
 }
 
 function GetCurrentVersion {
     $currentJsonData = Get-Content $CurrentVPath | ConvertFrom-Json
-    $Global:currentJsonVersion = $currentJsonData[0].Value
-    $Global:currentTarget = $currentJsonData[1].Value
-    $Global:currentUNWDSversion = $currentJsonData[2].Value
-    $Global:currentBuildNumber = $currentJsonData[3].Value
-    $Global:currentPHPversion = $currentJsonData[4].Value
-    $Global:currentReleasedDate = $currentJsonData[5].Value
-    Write-Host "[*] Current JSON configuraton version: $currentJsonVersion"
+    Add-Content -Path $PSScriptRoot/log.txt -Value "GetCurrentVersion activity log:"
+    Add-Content -Path $PSScriptRoot/log.txt -Value "Current JSON data:"
+    Add-Content -Path $PSScriptRoot/log.txt -Value "$currentJsonData"
+    $Global:LocalName = $currentJsonData.job
+    $Global:currentTarget = $currentJsonData.mcpe_version
+    $Global:currentUNWDSversion = $currentJsonData.base_version
+    $Global:currentBuildNumber = $currentJsonData.build_number
+    $Global:currentPHPversion = $currentJsonData.php_version
+    $Global:currentReleasedDate = $currentJsonData.date
+    $Global:currentHumanDate=(Get-Date 01.01.1970)+([System.TimeSpan]::fromseconds($currentReleasedDate))
     Write-Host "[*] Current PHP version is: $currentPHPversion"
-    Write-Host "[*] Current UNWDS version is: $currentUNWDSversion - $currentBuildNumber ($currentTarget), released in $currentReleasedDate"
+    Write-Host "[*] Current $LocalName version is: $currentUNWDSversion - $currentBuildNumber ($currentTarget), released in $currentHumanDate"
     Write-Host "`n"
 }
 
@@ -52,9 +64,9 @@ function CompareVersion {
         UpdatePHP
     }
     if ($remoteUNWDSversion -le $currentUNWDSversion) {
-        Write-Host "[*] UNWDS already up-to-date (Server: $remoteUNWDSversion - You have: $currentUNWDSversion)"
+        Write-Host "[*] $ServerName already up-to-date (Server: $remoteUNWDSversion - You have: $currentUNWDSversion)"
     } else {
-        Write-Host "[*] UNWDS need update (Server: $remoteUNWDSversion, released in $remoteReleasedDate - You have: $currentUNWDSversion, released in $currentReleasedDate)"
+        Write-Host "[*] $ServerName need update (Server: $remoteUNWDSversion, released in $remoteReleasedDate - You have: $currentUNWDSversion, released in $currentReleasedDate)"
         UpdateUNWDS
     }
     UpdateVersionFile
@@ -75,51 +87,52 @@ function ErrorCleanUp {
 }
 
 function Install {
-    GetServerVersion
-    Write-Host "[2/3] Downloading UNWDS v$remoteUNWDSversion ($remoteTarget), released in $remoteReleasedDate...";
-    $DownloadURL = "https://github.com/$repo/releases/download/v$remoteUNWDSVersion/$file"
-    Invoke-WebRequest $DownloadURL -Out $file
-    #Write-Host $DownloadURL #Debugging only
-    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.cmd" -OutFile "start.cmd"
+    Add-Content -Path $PSScriptRoot/log.txt -Value "Install log:"
+    Write-Host "[2/3] Downloading $ServerName v$remoteUNWDSversion (for $remoteTarget), released in $remoteReleasedDate...";
+    Add-Content -Path $PSScriptRoot/log.txt -Value "Use download URL with file name: $downloadURL ($file_name)"
+    Invoke-WebRequest $downloadURL -Out $PSScriptRoot/$file_name
+    Write-Host "Downloading $downloadURL" #Debugging only
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.cmd" -OutFile "$PSScriptRoot/start.cmd"
     Write-Host "`n"
     Write-Host "[3/3] Downloading PHP $remotePHPVersion (Windows x64)...";
-    Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-$remotePHPversion-Aggregate/lastSuccessfulBuild/artifact/PHP-$remotePHPversion-Windows-x64.zip" -OutFile "PHP-$remotePHPversion-Windows-x64.zip"
-    Expand-Archive -LiteralPath PHP-$remotePHPversion-Windows-x64.zip -Force
-    Get-ChildItem -Path "PHP-$remotePHPversion-Windows-x64" -Recurse |  Move-Item -Destination .
-    Remove-Item PHP-$remotePHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
-    Remove-Item PHP-$remotePHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
+    Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-$remotePHPversion-Aggregate/lastSuccessfulBuild/artifact/PHP-$remotePHPversion-Windows-x64.zip" -OutFile "$PSScriptRoot/PHP-$remotePHPversion-Windows-x64.zip"
+    Expand-Archive -LiteralPath $PSScriptRoot/PHP-$remotePHPversion-Windows-x64.zip -Force
+    Get-ChildItem -Path "$PSScriptRoot/PHP-$remotePHPversion-Windows-x64" -Recurse |  Move-Item -Destination .
+    Remove-Item $PSScriptRoot/PHP-$remotePHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
+    Remove-Item $PSScriptRoot/PHP-$remotePHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
     Write-Host "`n"
 }
 function UpdatePHP {
-    Remove-Item PHP-$currentPHPversion-Windows-x64 -Recurse -Force -erroraction 'SilentlyContinue'
-    Remove-Item PHP-$remotePHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
-    Remove-Item bin -Recurse -Force -erroraction 'silentlycontinue'
-    Remove-Item PHP-$remotePHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
-    Remove-Item PHP-$currentPHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
+    Remove-Item $PSScriptRoot/PHP-$currentPHPversion-Windows-x64 -Recurse -Force -erroraction 'SilentlyContinue'
+    Remove-Item $PSScriptRoot/PHP-$remotePHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
+    Remove-Item $PSScriptRoot/bin -Recurse -Force -erroraction 'silentlycontinue'
+    Remove-Item $PSScriptRoot/PHP-$remotePHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
+    Remove-Item $PSScriptRoot/PHP-$currentPHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
     Remove-Item vc_redist.x64.exe -erroraction 'silentlycontinue'
     Write-Host "[*] Updating PHP v$remotePHPversion (Windows x64)...";
-    Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-$remotePHPversion-Aggregate/lastSuccessfulBuild/artifact/PHP-$remotePHPversion-Windows-x64.zip" -OutFile "PHP-$remotePHPversion-Windows-x64.zip"
-    Expand-Archive -LiteralPath PHP-$remotePHPversion-Windows-x64.zip -Force
-    Get-ChildItem -Path "PHP-$remotePHPversion-Windows-x64" -Recurse |  Move-Item -Destination .
-    Remove-Item PHP-$remotePHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
-    Remove-Item PHP-$remotePHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
+    Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-$remotePHPversion-Aggregate/lastSuccessfulBuild/artifact/PHP-$remotePHPversion-Windows-x64.zip" -OutFile "$PSScriptRoot/PHP-$remotePHPversion-Windows-x64.zip"
+    Expand-Archive -LiteralPath $PSScriptRoot/PHP-$remotePHPversion-Windows-x64.zip -Force
+    Get-ChildItem -Path "$PSScriptRoot/PHP-$remotePHPversion-Windows-x64" -Recurse |  Move-Item -Destination .
+    Remove-Item $PSScriptRoot/PHP-$remotePHPversion-Windows-x64.zip -Force -erroraction 'silentlycontinue'
+    Remove-Item $PSScriptRoot/PHP-$remotePHPversion-Windows-x64 -Recurse -Force -erroraction 'silentlycontinue'
     Write-Host "[*] Update successfully!"
 }
 
 function UpdateUNWDS {
-    $DownloadURL = "https://github.com/$repo/releases/download/v$remoteUNWDSVersion/$file"
-    Remove-Item UNWDS.phar -Force -erroraction 'silentlycontinue'
+    Add-Content -Path $PSScriptRoot/log.txt -Value "Update log:"
+    Remove-Item $PSScriptRoot/$file_name -Force -erroraction 'silentlycontinue'
     Remove-Item start.cmd -erroraction 'silentlycontinue'
     Write-Host "[*] Updating UNWDS v$remoteUNWDSversion";
-    Invoke-WebRequest $DownloadURL -Out $file
+    Invoke-WebRequest $downloadURL -Out $PSScriptRoot/$file_name
+    Add-Content -Path $PSScriptRoot/log.txt -Value "Use download URL with file name: $downloadURL ($file_name)"
     Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.cmd" -OutFile "start.cmd"
     Write-Host "[*] Update successfully!"
 }
 
 function UpdateVersionFile {
-    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/version_control/remoteVersion.json" -OutFile "remoteVersion.json"
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/update/api.json" -OutFile "$PSScriptRoot/remoteVersion.json"
     Remove-Item -Path $CurrentVPath -Force -erroraction 'silentlycontinue'
-    Rename-Item -Path "remoteVersion.json" -NewName "currentVersion.json"
+    Rename-Item -Path "$PSScriptRoot/remoteVersion.json" -NewName "$PSScriptRoot/currentVersion.json"
 }
 
 function CheckFiles {
@@ -168,6 +181,9 @@ function StartScript {
     1stCheck
 }
 function Update {
+    Write-Host "`n"
+    Write-Host "[*] Seems $name has been installed on this directory. Checking for update...."
+    Write-Host "`n"
     GetCurrentVersion
     GetServerVersion
     CompareVersion
@@ -176,13 +192,14 @@ function Update {
 function Main {
     if (-not (Test-Path -Path currentVersion.json)) {
         Write-Host "`n"
-        Write-Host "[*] Welcome to UNWDS Installer!";
+        Write-Host "[*] Welcome to $name Installer!";
         Write-Host "`n"
         Write-Host "[*] Windows x64 detected. Installing...";
         Write-Host "`n"
         Write-Host "[1/3] Cleaning up";
         Write-Host "`n"
         CleanUp
+        GetServerVersion
         Install
         CheckFiles
         UpdateVersionFile
@@ -193,8 +210,8 @@ function Main {
 }
 
 function UnixInstall { #need to test later, currently I don't have any linux/macos machine...
-    Invoke-WebRequest -Uri https://unnamednetwork.github.io/UNWDS/scripts/installer.sh -OutFile "installer.sh"
-    bash installer.sh
+    Invoke-WebRequest -Uri https://unnamednetwork.github.io/UNWDS/scripts/installer.sh -OutFile "$PSScriptRoot/installer.sh"
+    bash ./installer.sh
 }
 
 StartScript
