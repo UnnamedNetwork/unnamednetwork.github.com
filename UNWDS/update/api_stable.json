@@ -1,0 +1,16 @@
+{
+   "job": "UNWDS",
+   "php_version": 7.4,
+   "base_version": "2.7.2",
+   "build_number": 1450,
+   "is_dev": true,
+   "branch": "stable",
+   "git_commit": "3529fb3b8955516564c5725e03332cd0c7a867ed",
+   "mcpe_version": "1.17.10",
+   "phar_name": "UNWDS.phar",
+   "dummy": null,
+   "build": 1450,
+   "date": 1628317658,
+   "details_url": "https://github.com/UnnamedNetwork/UNWDS/commit/3529fb3b8955516564c5725e03332cd0c7a867ed",
+   "download_url": "https://github.com/UnnamedNetwork/build-repo/blob/master/UNWDS/branch/stable/latest/1450/UNWDS.phar"
+}
