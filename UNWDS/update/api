@@ -1,0 +1,16 @@
+{
+   "job": "UNWDS",
+   "php_version": 7.4,
+   "base_version": "2.7.1",
+   "build_number": 1387,
+   "is_dev": false,
+   "branch": "2.7.1",
+   "git_commit": "f4d7c7d6884893d6ba5243b0d176210ebbc9436c",
+   "mcpe_version": "1.17.10",
+   "phar_name": "UNWDS.phar",
+   "dummy": null,
+   "build": 1387,
+   "date": 1627113167,
+   "details_url": "https://github.com/UnnamedNetwork/UNWDS/releases/tag/v2.7.1",
+   "download_url": "https://github.com/UnnamedNetwork/UNWDS/releases/download/v2.7.1/UNWDS.phar"
+}
