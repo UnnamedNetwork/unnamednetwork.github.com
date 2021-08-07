@@ -2,15 +2,15 @@
    "job": "UNWDS",
    "php_version": 7.4,
    "base_version": "2.7.2",
-   "build_number": 1447,
+   "build_number": 1448,
    "is_dev": true,
    "branch": "auto-api-update",
-   "git_commit": "552f1b2961f389418da6d957784bf7fb9ecb8145",
+   "git_commit": "8c78d97b71997e4a8b23e4d5c1cb93b3399e9001",
    "mcpe_version": "1.17.10",
    "phar_name": "UNWDS.phar",
    "dummy": null,
-   "build": 1447,
-   "date": 1628316442,
-   "details_url": "https://github.com/UnnamedNetwork/UNWDS/commit/552f1b2961f389418da6d957784bf7fb9ecb8145",
-   "download_url": "https://github.com/UnnamedNetwork/build-repo/blob/master/UNWDS/branch//latest/UNWDS.phar"
+   "build": 1448,
+   "date": 1628316615,
+   "details_url": "https://github.com/UnnamedNetwork/UNWDS/commit/8c78d97b71997e4a8b23e4d5c1cb93b3399e9001",
+   "download_url": "https://github.com/UnnamedNetwork/build-repo/blob/master/UNWDS/branch/auto-api-update/latest/UNWDS.phar"
 }
