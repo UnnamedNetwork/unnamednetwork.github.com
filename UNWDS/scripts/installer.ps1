@@ -66,7 +66,7 @@ function CompareVersion {
     if ($remoteUNWDSversion -le $currentUNWDSversion) {
         Write-Host "[*] $ServerName already up-to-date (Server: $remoteUNWDSversion - You have: $currentUNWDSversion)"
     } else {
-        Write-Host "[*] $ServerName need update (Server: $remoteUNWDSversion, released in $remoteReleasedDate - You have: $currentUNWDSversion, released in $currentReleasedDate)"
+        Write-Host "[*] $ServerName need update (Server: $remoteUNWDSversion, released in $remoteHumanDate - You have: $currentUNWDSversion, released in $currentHumanDate)"
         UpdateUNWDS
     }
     UpdateVersionFile
