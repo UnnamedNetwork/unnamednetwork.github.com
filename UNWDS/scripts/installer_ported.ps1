@@ -63,11 +63,10 @@ if ( "$BUILD_URL", "$CHANNEL" -eq "", "custom"){
     }
     $FILENAME = $VERSION_DATA.phar_name
     $BASE_VERSION = $VERSION_DATA.base_version
-    $BUILD = $VERSION_DATA.build_number
+    $BUILD = $VERSION_DATA.build
     $MCPE_VERSION = $VERSION_DATA.mcpe_version
     $PHP_VERSION = $VERSION_DATA.php_version
     $VERSION_DATE = $VERSION_DATA.date
-    #$BASE_URL = $VERSION_DATA.url #this not present in their API, why adding this?
     $VERSION_DOWNLOAD = $VERSION_DATA.download_url
 
     # In PocketMine-MP *nix installer, they determine what OS/distro the script run on, to use the epoch time converter correctly
@@ -86,7 +85,7 @@ if ( "$BUILD_URL", "$CHANNEL" -eq "", "custom"){
     #     Write-Output "`n"
     #     Write-Output "[!] Failed to download version information: Empty response from API"
 	# 	  exit 1
-    # }
+    # } # I don't know why this is not working as expected. Commented out.
     }
 }
 
