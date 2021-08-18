@@ -1,0 +1,16 @@
+{
+   "job": null,
+   "php_version": 7.4,
+   "base_version": null,
+   "build_number": null,
+   "is_dev": true,
+   "branch": "stable",
+   "git_commit": "6806d1eaebb86d509a18e04caaff664bd528aca3",
+   "mcpe_version": null,
+   "phar_name": ".phar",
+   "dummy": null,
+   "build": null,
+   "date": 1629307343,
+   "details_url": "https://github.com/UnnamedNetwork//commit/6806d1eaebb86d509a18e04caaff664bd528aca3",
+   "download_url": "https://github.com/UnnamedNetwork/build-repo/raw/master//branch/stable//UNWDS.phar"
+}
