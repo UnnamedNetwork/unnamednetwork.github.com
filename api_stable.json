@@ -5,12 +5,12 @@
    "build_number": null,
    "is_dev": true,
    "branch": "stable",
-   "git_commit": "becc05460a7f7ba3a0d2142212db1c4910404f50",
+   "git_commit": "6d168fe220eb6131cca20b21e9731baec5a657ab",
    "mcpe_version": null,
    "phar_name": ".phar",
    "dummy": null,
    "build": null,
-   "date": 1629307827,
-   "details_url": "https://github.com/UnnamedNetwork//commit/becc05460a7f7ba3a0d2142212db1c4910404f50",
+   "date": 1629307849,
+   "details_url": "https://github.com/UnnamedNetwork//commit/6d168fe220eb6131cca20b21e9731baec5a657ab",
    "download_url": "https://github.com/UnnamedNetwork/build-repo/raw/master//branch/stable//UNWDS.phar"
 }
