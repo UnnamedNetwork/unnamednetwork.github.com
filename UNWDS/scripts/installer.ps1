@@ -11,6 +11,10 @@ $IsWin = $PSVersionTable.Platform -match '^($|(Microsoft )?Win)'
 
 $CurrentVPath = "$PSScriptRoot\currentVersion.json"
 
+$Name = "UNWDS"
+$ServerName = $Name
+$LocalName = $Name
+
 
 
 function GetServerVersion {
@@ -20,10 +24,9 @@ function GetServerVersion {
     $remoteJsonData = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/update/api.json" | ConvertFrom-Json
     Add-Content -Path $PSScriptRoot/log.txt -Value "Server JSON data:"
     Add-Content -Path $PSScriptRoot/log.txt -Value "$remoteJsonData"
-    $Global:ServerName = $remoteJsonData.job; 
     $Global:remoteTarget= $remoteJsonData.mcpe_version
     $Global:remoteUNWDSversion = $remoteJsonData.base_version
-    $Global:remoteBuildNumber = $remoteJsonData.build_number
+    $Global:remoteBuildNumber = $remoteJsonData.build
     $Global:remotePHPversion = $remoteJsonData.php_version
     $Global:downloadURL = $remoteJsonData.download_url
     $Global:remoteReleasedDate = $remoteJsonData.date
@@ -42,10 +45,9 @@ function GetCurrentVersion {
     Add-Content -Path $PSScriptRoot/log.txt -Value "GetCurrentVersion activity log:"
     Add-Content -Path $PSScriptRoot/log.txt -Value "Current JSON data:"
     Add-Content -Path $PSScriptRoot/log.txt -Value "$currentJsonData"
-    $Global:LocalName = $currentJsonData.job
     $Global:currentTarget = $currentJsonData.mcpe_version
     $Global:currentUNWDSversion = $currentJsonData.base_version
-    $Global:currentBuildNumber = $currentJsonData.build_number
+    $Global:currentBuildNumber = $currentJsonData.build
     $Global:currentPHPversion = $currentJsonData.php_version
     $Global:currentReleasedDate = $currentJsonData.date
     $Global:currentHumanDate=(Get-Date 01.01.1970)+([System.TimeSpan]::fromseconds($currentReleasedDate))
