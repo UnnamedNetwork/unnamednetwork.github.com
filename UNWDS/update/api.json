@@ -1,6 +1,6 @@
 {
    "job": "UNWDS",
-   "php_version": 8,
+   "php_version": 8.0,
    "base_version": "2.7.3",
    "build_number": 333,
    "is_dev": true,
