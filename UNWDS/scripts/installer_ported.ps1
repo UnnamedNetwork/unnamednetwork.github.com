@@ -6,6 +6,7 @@ $CHANNEL="stable"
 $BRANCH="stable"
 $NAME="UNWDS"
 $BUILD_URL=""
+$FILENAME="UNWDS.phar"
 
 # we'll port these function later, first we will focus on porting some default functions of the script.
 # $update="off"
@@ -61,7 +62,6 @@ if ( "$BUILD_URL", "$CHANNEL" -eq "", "custom"){
             exit 1
         }
     }
-    $FILENAME = $VERSION_DATA.phar_name
     $BASE_VERSION = $VERSION_DATA.base_version
     $BUILD = $VERSION_DATA.build
     $MCPE_VERSION = $VERSION_DATA.mcpe_version
