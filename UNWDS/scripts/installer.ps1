@@ -4,7 +4,7 @@
 #TODO: work at 'function as parameter'
 $name = "UNWDS"
 
-$scriptVersion = "2.3.0"
+$scriptVersion = "2.3.1"
 $host.ui.RawUI.WindowTitle = "$name Installer (v$scriptVersion)"
 
 $IsWin = $PSVersionTable.Platform -match '^($|(Microsoft )?Win)'
@@ -12,6 +12,7 @@ $IsWin = $PSVersionTable.Platform -match '^($|(Microsoft )?Win)'
 $CurrentVPath = "$PSScriptRoot\currentVersion.json"
 
 $Name = "UNWDS"
+$file_name = "UNWDS.phar"
 $ServerName = $Name
 $LocalName = $Name
 
@@ -30,7 +31,6 @@ function GetServerVersion {
     $Global:remotePHPversion = $remoteJsonData.php_version
     $Global:downloadURL = $remoteJsonData.download_url
     $Global:remoteReleasedDate = $remoteJsonData.date
-    $Global:file_name = $remoteJsonData.phar_name
     $Global:ReleaseDetails = $remoteJsonData.details_url
     $Global:remoteHumanDate=(Get-Date 01.01.1970)+([System.TimeSpan]::fromseconds($remoteReleasedDate))
     Write-Host "[*] Server latest PHP version is: $remotePHPversion"
@@ -92,7 +92,7 @@ function Install {
     Add-Content -Path $PSScriptRoot/log.txt -Value "Install log:"
     Write-Host "[2/3] Downloading $ServerName v$remoteUNWDSversion (for $remoteTarget), released in $remoteHumanDate...";
     Add-Content -Path $PSScriptRoot/log.txt -Value "Use download URL with file name: $downloadURL ($file_name)"
-    Invoke-WebRequest -Uri $downloadURL -Out $PSScriptRoot/$file_name
+    Invoke-WebRequest -Uri $downloadURL -Out $file_name "$PSScriptRoot/$file_name"
     Write-Host "Downloading $downloadURL" #Debugging only
     Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.cmd" -OutFile "$PSScriptRoot/start.cmd"
     Write-Host "`n"
