@@ -92,7 +92,7 @@ function Install {
     Add-Content -Path $PSScriptRoot/log.txt -Value "Install log:"
     Write-Host "[2/3] Downloading $ServerName v$remoteUNWDSversion (for $remoteTarget), released in $remoteHumanDate...";
     Add-Content -Path $PSScriptRoot/log.txt -Value "Use download URL with file name: $downloadURL ($file_name)"
-    Invoke-WebRequest -Uri $downloadURL -Out $file_name "$PSScriptRoot/$file_name"
+    Invoke-WebRequest -Uri $downloadURL -Out $file_name
     Write-Host "Downloading $downloadURL" #Debugging only
     Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.cmd" -OutFile "$PSScriptRoot/start.cmd"
     Write-Host "`n"
@@ -125,7 +125,7 @@ function UpdateUNWDS {
     Remove-Item $PSScriptRoot/$file_name -Force -erroraction 'silentlycontinue'
     Remove-Item start.cmd -erroraction 'silentlycontinue'
     Write-Host "[*] Updating UNWDS v$remoteUNWDSversion";
-    Invoke-WebRequest -Uri $downloadURL -Out $PSScriptRoot/$file_name
+    Invoke-WebRequest -Uri $downloadURL -Out $file_name
     Add-Content -Path $PSScriptRoot/log.txt -Value "Use download URL with file name: $downloadURL ($file_name)"
     Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/stable/start.cmd" -OutFile "start.cmd"
     Write-Host "[*] Update successfully!"
