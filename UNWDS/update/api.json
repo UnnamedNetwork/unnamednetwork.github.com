@@ -1,5 +1,5 @@
 {
-   "php_version": 8,
+   "php_version": "8.0",
    "base_version": "2.10.0",
    "build": 1134,
    "is_dev": true,
