@@ -53,7 +53,7 @@ if ( "$BUILD_URL", "$CHANNEL" -eq "", "custom"){
 } else {
     Write-Output "[*] Retrieving latest build data for channel: $CHANNEL"
     Write-Output "`n"
-    $VERSION_DATA = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/update/api.json" | ConvertFrom-Json
+    $VERSION_DATA = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/UnnamedNetwork/unnamednetwork.github.io/main/UNWDS/update/api.json" -UseBasicParsing | ConvertFrom-Json
     if ( "$VERSION_DATA" -eq "" ){
         $error_detail="Parse JSON data $VERSION_DATA error."
         if ( $error_detail -eq "" ){
@@ -115,7 +115,7 @@ Remove-Item src -Force -Recurse -ErrorAction 'silentlycontinue'
 
 Write-Output "`n"
 Write-Output -n "[2/3] Downloading $NAME phar..."
-download_file "$VERSION_DOWNLOAD" -OutFile "$FILENAME"
+download_file "$VERSION_DOWNLOAD" -UseBasicParsing -OutFile "$FILENAME"
 if (Test-Path -Path UNWDS.phar){
 } else {
     Write-Output "`n"
@@ -134,13 +134,13 @@ if ( "$pharContent" -eq "<!DOCTYPE html>" ) {
 	exit 1
 } else {
     if ( "$CHANNEL" -eq "soft" ){
-        download_file "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS-alt/${BRANCH}/resources/start.cmd" -OutFile "start.cmd"
+        download_file "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS-alt/${BRANCH}/resources/start.cmd" -UseBasicParsing -OutFile "start.cmd"
     }else{
-        download_file "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/${BRANCH}/start.cmd" -OutFile "start.cmd"
+        download_file "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/${BRANCH}/start.cmd" -UseBasicParsing -OutFile "start.cmd"
     }
-    download_file "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/${BRANCH}/LICENSE" -OutFile "LICENSE"
-    download_file "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/${BRANCH}/README.md" -OutFile "README.md"
-    download_file "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/${BRANCH}/CMNOTES" -OutFile "CMNOTES"
+    download_file "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/${BRANCH}/LICENSE" -UseBasicParsing -OutFile "LICENSE"
+    download_file "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/${BRANCH}/README.md" -UseBasicParsing -OutFile "README.md"
+    download_file "https://raw.githubusercontent.com/UnnamedNetwork/UNWDS/${BRANCH}/CMNOTES" -UseBasicParsing -OutFile "CMNOTES"
 }
 
 # Another GPG key/certificate things, skipped
@@ -150,7 +150,7 @@ if ( "$pharContent" -eq "<!DOCTYPE html>" ) {
 
 Write-Output "`n"
 Write-Host "[3/3] Downloading PHP $PHP_VERSION (Windows x64)...";
-Invoke-WebRequest -Uri "https://jenkins.pmmp.io/job/PHP-$PHP_VERSION-Aggregate/lastSuccessfulBuild/artifact/PHP-$PHP_VERSION-Windows-x64.zip" -OutFile "$PSScriptRoot/PHP-$PHP_VERSION-Windows-x64.zip"
+download_file "https://jenkins.pmmp.io/job/PHP-$PHP_VERSION-Aggregate/lastSuccessfulBuild/artifact/PHP-$PHP_VERSION-Windows-x64.zip" -UseBasicParsing -OutFile "$PSScriptRoot/PHP-$PHP_VERSION-Windows-x64.zip"
 Expand-Archive -LiteralPath $PSScriptRoot/PHP-$PHP_VERSION-Windows-x64.zip -Force
 Get-ChildItem -Path "$PSScriptRoot/PHP-$PHP_VERSION-Windows-x64" -Recurse |  Move-Item -Destination .
 Remove-Item $PSScriptRoot/PHP-$PHP_VERSION-Windows-x64.zip -Force -erroraction 'silentlycontinue'
