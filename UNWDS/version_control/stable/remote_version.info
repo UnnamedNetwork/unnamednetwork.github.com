@@ -1,9 +1,0 @@
-CAUTION = This file contain UNWDS version strings. Do not edit it.
-
-REMOTE_UNWDS_VERSION = 2.5.1a
-REMOTE_PHP_VERSION = 7.4
-REMOTE_RELEASED = 06 Jul 2021
-
-NOTE = This function for string below is not released yet. Integrated it for internal developments.
-REMOTE_UPDATE_TARGET = stable
-REMOTE_RELEASE_TARGET = RELEASE

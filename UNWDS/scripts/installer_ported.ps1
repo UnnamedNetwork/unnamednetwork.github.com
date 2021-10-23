@@ -6,7 +6,7 @@ $CHANNEL="stable"
 $BRANCH="stable"
 $NAME="UNWDS"
 $BUILD_URL=""
-$FILENAME="UNWDS.phar"
+$FILENAME="$NAME.phar"
 
 # we'll port these function later, first we will focus on porting some default functions of the script.
 # $update="off"
