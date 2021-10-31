@@ -2,7 +2,7 @@
    "php_version": "8.0",
    "base_version": "2.10.1",
    "build": 1140,
-   "is_dev": true,
+   "is_dev": false,
    "channel": "stable",
    "git_commit": "76b4f85624fd8b91bdcd5a791be4490f698f6af7",
    "mcpe_version": "1.17.40",
