@@ -4,10 +4,10 @@
    "build": null,
    "is_dev": true,
    "channel": "3.0-pm-4",
-   "git_commit": "5315e6ce80e07ce832f6616c84fc19ac20b960f6",
+   "git_commit": "f8be09be601725685a3048bc5ce30eb6393f2351",
    "mcpe_version": "1.18.0",
-   "date": 1639103441,
-   "details_url": "https://github.com/UnnamedNetwork/UNWDS/commit/5315e6ce80e07ce832f6616c84fc19ac20b960f6",
+   "date": 1639103780,
+   "details_url": "https://github.com/UnnamedNetwork/UNWDS/commit/f8be09be601725685a3048bc5ce30eb6393f2351",
    "download_url": "https://github.com/UnnamedNetwork/build-repo/raw/master/UNWDS/branch/3.0-pm-4//UNWDS.phar",
-   "source_url": "https://github.com/UnnamedNetwork/UNWDS/tree/5315e6ce80e07ce832f6616c84fc19ac20b960f6"
+   "source_url": "https://github.com/UnnamedNetwork/UNWDS/tree/f8be09be601725685a3048bc5ce30eb6393f2351"
 }
