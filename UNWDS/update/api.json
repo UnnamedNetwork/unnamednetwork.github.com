@@ -1,8 +1,8 @@
 {
-   "php_version": 8,
+   "php_version": "8.0",
    "base_version": "3.0.0",
    "build": 1680,
-   "is_dev": true,
+   "is_dev": false,
    "channel": "stable",
    "git_commit": "b0bf7d0d102978f1849d048fbd1eedb2eff24eaf",
    "mcpe_version": "1.18.0",
