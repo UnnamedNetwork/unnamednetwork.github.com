@@ -1,13 +1,13 @@
 {
    "php_version": 8,
    "base_version": "3.0.5",
-   "build": 1743,
+   "build": 1748,
    "is_dev": true,
    "channel": "stable",
-   "git_commit": "ff331220fe76cde4834e78dc3044e7486e315dd7",
+   "git_commit": "6f51549ec5999743bc1ac11214448be1a9b5fca6",
    "mcpe_version": "1.18.0",
-   "date": 1642384903,
-   "details_url": "https://github.com/UnnamedNetwork/UNWDS/commit/ff331220fe76cde4834e78dc3044e7486e315dd7",
-   "download_url": "https://github.com/UnnamedNetwork/build-repo/raw/master/UNWDS/branch/stable/1743/UNWDS.phar",
-   "source_url": "https://github.com/UnnamedNetwork/UNWDS/tree/ff331220fe76cde4834e78dc3044e7486e315dd7"
+   "date": 1642693267,
+   "details_url": "https://github.com/UnnamedNetwork/UNWDS/commit/6f51549ec5999743bc1ac11214448be1a9b5fca6",
+   "download_url": "https://github.com/UnnamedNetwork/build-repo/raw/master/UNWDS/branch/stable/1748/UNWDS.phar",
+   "source_url": "https://github.com/UnnamedNetwork/UNWDS/tree/6f51549ec5999743bc1ac11214448be1a9b5fca6"
 }
